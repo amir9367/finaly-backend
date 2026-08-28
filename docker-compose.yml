@@ -46,13 +46,6 @@ services:
       Sms__Melipayamak__Origin: ${MELI_ORIGIN:-}
       Booking__WindowDays: "14"
     ports:
-      # Direct API access for local testing ONLY. Binding to 127.0.0.1 keeps
-      # the API unreachable from other machines — otherwise anyone could POST
-      # forged X-Forwarded-For headers straight to :8080 and rotate their IP
-      # identity every request, defeating all per-IP rate limits. In
-      # production behind a TLS ingress on another host, remove this mapping
-      # entirely; the panels' nginx proxies reach the API over the compose
-      # network without it.
       - "127.0.0.1:8080:8080"
 
   admin:
@@ -63,7 +56,7 @@ services:
       api:
         condition: service_healthy
     ports:
-      - "127.0.0.1:3000:8080"
+      - "3000:8080"
 
   booking:
     build: ./src/Clinic.BookingPage
@@ -73,7 +66,7 @@ services:
       api:
         condition: service_healthy
     ports:
-      - "127.0.0.1:3001:8080"
+      - "3001:8080"
 
 volumes:
   clinic-pgdata:
