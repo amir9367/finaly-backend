@@ -1,0 +1,23 @@
+# .NET
+bin/
+obj/
+*.user
+*.suo
+.vs/
+.vscode/
+artifacts/
+
+# Node
+node_modules/
+dist/
+*.local
+
+# IDE / OS
+.idea/
+Thumbs.db
+.DS_Store
+
+# Env / secrets
+.env
+.env.*
+!.env.example

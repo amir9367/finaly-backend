@@ -1,0 +1,79 @@
+# Secrets are REQUIRED: every ${VAR:?...} makes `docker compose up` fail fast
+# instead of silently booting the clinic on a committed default credential.
+# Copy .env.example to .env (same folder) and fill in real values.
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: clinic-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: clinic
+      POSTGRES_USER: clinic
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in .env}
+    # No host port published — reach the DB via the compose network or
+    # `docker exec`. Exposing 5432/5433 on the host invites direct dumps.
+    volumes:
+      - clinic-pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U clinic -d clinic"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  api:
+    build: ./src/Clinic.Api
+    container_name: clinic-api
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://127.0.0.1:8080/health || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 20s
+    environment:
+      ASPNETCORE_ENVIRONMENT: Production
+      ConnectionStrings__Default: Host=postgres;Port=5432;Database=clinic;Username=clinic;Password=${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in .env};MaxAutoPrepare=20;AutoPrepareMinUsages=2
+      Jwt__Secret: ${JWT_SECRET:?Set JWT_SECRET (32+ random chars) in .env}
+      AdminSeed__Username: ${ADMIN_USERNAME:-admin}
+      AdminSeed__Password: ${ADMIN_PASSWORD:?Set ADMIN_PASSWORD (12+ chars) in .env}
+      Sms__Provider: ${SMS_PROVIDER:-Melipayamak}
+      Sms__Melipayamak__Username: ${MELI_USERNAME:-}
+      Sms__Melipayamak__Password: ${MELI_PASSWORD:-}
+      Sms__Melipayamak__Origin: ${MELI_ORIGIN:-}
+      Booking__WindowDays: "14"
+    ports:
+      # Direct API access for local testing ONLY. Binding to 127.0.0.1 keeps
+      # the API unreachable from other machines — otherwise anyone could POST
+      # forged X-Forwarded-For headers straight to :8080 and rotate their IP
+      # identity every request, defeating all per-IP rate limits. In
+      # production behind a TLS ingress on another host, remove this mapping
+      # entirely; the panels' nginx proxies reach the API over the compose
+      # network without it.
+      - "127.0.0.1:8080:8080"
+
+  admin:
+    build: ./src/Clinic.AdminPanel
+    container_name: clinic-admin
+    restart: unless-stopped
+    depends_on:
+      api:
+        condition: service_healthy
+    ports:
+      - "127.0.0.1:3000:8080"
+
+  booking:
+    build: ./src/Clinic.BookingPage
+    container_name: clinic-booking
+    restart: unless-stopped
+    depends_on:
+      api:
+        condition: service_healthy
+    ports:
+      - "127.0.0.1:3001:8080"
+
+volumes:
+  clinic-pgdata:
