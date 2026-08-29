@@ -57,20 +57,26 @@ public class DoctorsAdminController(AppDbContext db) : ControllerBase
         doctor.IsActive = request.IsActive;
 
         // Replace the weekly schedule wholesale — the panel edits it as one unit.
+        // Must use AddRange explicitly so EF tracks new entities as Added (INSERT),
+        // not Modified (UPDATE). Assigning to the navigation property alone causes
+        // DbUpdateConcurrencyException because EF generates UPDATE for non-zero GUIDs.
         db.DoctorSchedules.RemoveRange(doctor.Schedules);
-        doctor.Schedules = ParseSchedules(request.Schedules);
+        var newSchedules = ParseSchedules(request.Schedules);
+        foreach (var s in newSchedules) s.DoctorId = doctor.Id;
+        db.DoctorSchedules.AddRange(newSchedules);
+        doctor.Schedules = newSchedules;
 
         await db.SaveChangesAsync(ct);
         return doctor.ToAdminDto();
     }
 
-    /// <summary>Soft-delete: doctors keep historical appointments, so they are deactivated instead.</summary>
     [HttpDelete("{id:guid}")]
-    public async Task<IActionResult> Deactivate(Guid id, CancellationToken ct)
+    public async Task<IActionResult> Delete(Guid id, CancellationToken ct)
     {
-        var doctor = await db.Doctors.FirstOrDefaultAsync(d => d.Id == id, ct)
+        var doctor = await db.Doctors.Include(d => d.Schedules).FirstOrDefaultAsync(d => d.Id == id, ct)
             ?? throw new NotFoundException("Doctor not found.");
-        doctor.IsActive = false;
+        db.DoctorSchedules.RemoveRange(doctor.Schedules);
+        db.Doctors.Remove(doctor);
         await db.SaveChangesAsync(ct);
         return NoContent();
     }

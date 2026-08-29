@@ -90,10 +90,10 @@ export default function Doctors() {
     }
   }
 
-  const deactivate = async (doctor: DoctorAdminDto) => {
+  const deleteDoctor = async (doctor: DoctorAdminDto) => {
     try {
       await api.delete(`/admin/doctors/${doctor.id}`)
-      message.success('پزشک غیرفعال شد')
+      message.success('پزشک حذف شد')
       await load()
     } catch (error) {
       message.error(errMsg(error))
@@ -156,13 +156,11 @@ export default function Doctors() {
                   <Button size="small" onClick={() => openEdit(record)}>
                     ویرایش
                   </Button>
-                  {record.isActive && (
-                    <Popconfirm title="این پزشک غیرفعال شود؟" onConfirm={() => deactivate(record)}>
-                      <Button size="small" danger>
-                        حذف
-                      </Button>
-                    </Popconfirm>
-                  )}
+                  <Popconfirm title="این پزشک برای همیشه حذف شود؟" onConfirm={() => deleteDoctor(record)}>
+                    <Button size="small" danger>
+                      حذف
+                    </Button>
+                  </Popconfirm>
                 </Space>
               ),
             },
