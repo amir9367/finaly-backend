@@ -57,14 +57,8 @@ public class DoctorsAdminController(AppDbContext db) : ControllerBase
         doctor.IsActive = request.IsActive;
 
         // Replace the weekly schedule wholesale — the panel edits it as one unit.
-        // Must use AddRange explicitly so EF tracks new entities as Added (INSERT),
-        // not Modified (UPDATE). Assigning to the navigation property alone causes
-        // DbUpdateConcurrencyException because EF generates UPDATE for non-zero GUIDs.
         db.DoctorSchedules.RemoveRange(doctor.Schedules);
-        var newSchedules = ParseSchedules(request.Schedules);
-        foreach (var s in newSchedules) s.DoctorId = doctor.Id;
-        db.DoctorSchedules.AddRange(newSchedules);
-        doctor.Schedules = newSchedules;
+        doctor.Schedules = ParseSchedules(request.Schedules);
 
         await db.SaveChangesAsync(ct);
         return doctor.ToAdminDto();

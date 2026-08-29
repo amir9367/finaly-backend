@@ -17,8 +17,13 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
     {
         base.OnModelCreating(modelBuilder);
 
+        // All entities use client-generated GUIDs (set in the property initializer).
+        // Without ValueGeneratedNever(), EF assumes a non-zero Guid key means the row
+        // already exists and emits UPDATE instead of INSERT — causing
+        // DbUpdateConcurrencyException when the row is brand new.
         modelBuilder.Entity<Doctor>(e =>
         {
+            e.Property(d => d.Id).ValueGeneratedNever();
             e.Property(d => d.FullName).HasMaxLength(150).IsRequired();
             e.Property(d => d.Specialty).HasMaxLength(150);
             e.Property(d => d.Location).HasMaxLength(100);
@@ -27,6 +32,7 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
 
         modelBuilder.Entity<DoctorSchedule>(e =>
         {
+            e.Property(s => s.Id).ValueGeneratedNever();
             e.HasIndex(s => new { s.DoctorId, s.Weekday });
             e.HasOne(s => s.Doctor)
                 .WithMany(d => d.Schedules)
@@ -36,6 +42,7 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
 
         modelBuilder.Entity<Appointment>(e =>
         {
+            e.Property(a => a.Id).ValueGeneratedNever();
             e.Property(a => a.ShortCode).HasMaxLength(16).IsRequired();
             e.Property(a => a.PatientName).HasMaxLength(120).IsRequired();
             e.Property(a => a.PatientPhone).HasMaxLength(20).IsRequired();
@@ -43,9 +50,9 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
             e.Property(a => a.InsuranceType).HasConversion<string>().HasMaxLength(20);
             e.Property(a => a.Notes).HasMaxLength(500);
             e.HasIndex(a => a.ShortCode).IsUnique();
-            e.HasIndex(a => a.PatientPhone); // per-phone active-booking cap
+            e.HasIndex(a => a.PatientPhone);
             e.HasIndex(a => new { a.DoctorId, a.StartsAt });
-            e.HasIndex(a => new { a.Status, a.StartsAt }); // exclusion-constraint filter + dashboard range scans
+            e.HasIndex(a => new { a.Status, a.StartsAt });
             e.HasOne(a => a.Doctor)
                 .WithMany()
                 .HasForeignKey(a => a.DoctorId)
@@ -54,6 +61,7 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
 
         modelBuilder.Entity<PhoneOtp>(e =>
         {
+            e.Property(o => o.Id).ValueGeneratedNever();
             e.Property(o => o.Phone).HasMaxLength(20).IsRequired();
             e.Property(o => o.CodeHash).HasMaxLength(64).IsRequired();
             e.HasIndex(o => o.AppointmentId);
@@ -61,6 +69,7 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
 
         modelBuilder.Entity<SmsLog>(e =>
         {
+            e.Property(s => s.Id).ValueGeneratedNever();
             e.Property(s => s.Phone).HasMaxLength(20).IsRequired();
             e.Property(s => s.Body).HasMaxLength(500).IsRequired();
             e.Property(s => s.Error).HasMaxLength(500);
@@ -73,12 +82,14 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
 
         modelBuilder.Entity<AdminUser>(e =>
         {
+            e.Property(u => u.Id).ValueGeneratedNever();
             e.Property(u => u.Username).HasMaxLength(64).IsRequired();
             e.HasIndex(u => u.Username).IsUnique();
         });
 
         modelBuilder.Entity<ExcelSyncLog>(e =>
         {
+            e.Property(l => l.Id).ValueGeneratedNever();
             e.Property(l => l.FileName).HasMaxLength(260).IsRequired();
         });
     }
