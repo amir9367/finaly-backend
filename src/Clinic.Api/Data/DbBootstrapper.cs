@@ -90,9 +90,24 @@ public static class DbBootstrapper
     public static async Task InitializeSqliteAsync(AppDbContext db, IConfiguration config, ILogger logger)
     {
         await db.Database.EnsureCreatedAsync();
+        await EnsureColumnsExistSqliteAsync(db);
         logger.LogInformation("Database schema ready (SQLite).");
         await SeedDoctorsAsync(db);
         await SeedAdminAsync(db, config, logger);
+    }
+
+    // EnsureCreatedAsync only runs once (no migrations). If columns were added to
+    // the domain after the DB was first created they will be absent and writes will
+    // throw a 500. Add them idempotently here so the schema stays in sync.
+    private static async Task EnsureColumnsExistSqliteAsync(AppDbContext db)
+    {
+        // SQLite supports "ADD COLUMN IF NOT EXISTS" since 3.37.0.
+        await db.Database.ExecuteSqlRawAsync(
+            "ALTER TABLE doctors ADD COLUMN IF NOT EXISTS default_visit_minutes INTEGER NOT NULL DEFAULT 30;");
+        await db.Database.ExecuteSqlRawAsync(
+            "ALTER TABLE doctors ADD COLUMN IF NOT EXISTS location TEXT NOT NULL DEFAULT '';");
+        await db.Database.ExecuteSqlRawAsync(
+            "ALTER TABLE doctor_schedules ADD COLUMN IF NOT EXISTS is_active INTEGER NOT NULL DEFAULT 1;");
     }
 
     private static async Task SeedAdminAsync(AppDbContext db, IConfiguration config, ILogger logger)
@@ -135,6 +150,19 @@ public static class DbBootstrapper
                 END IF;
             END $$;
             """);
+
+        // EnsureCreatedAsync only runs once (no migrations). Columns added to the
+        // domain after the DB was first created must be backfilled idempotently.
+        await db.Database.ExecuteSqlRawAsync("""
+            ALTER TABLE doctors
+                ADD COLUMN IF NOT EXISTS default_visit_minutes INTEGER NOT NULL DEFAULT 30,
+                ADD COLUMN IF NOT EXISTS location VARCHAR(100) NOT NULL DEFAULT '';
+            """);
+        await db.Database.ExecuteSqlRawAsync("""
+            ALTER TABLE doctor_schedules
+                ADD COLUMN IF NOT EXISTS is_active BOOLEAN NOT NULL DEFAULT TRUE;
+            """);
+
         logger.LogInformation("Database schema ready (exclusion constraint ensured).");
 
         await SeedDoctorsAsync(db);
