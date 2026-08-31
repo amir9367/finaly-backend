@@ -45,8 +45,8 @@ services:
       Sms__Melipayamak__Password: ${MELI_PASSWORD:-}
       Sms__Melipayamak__Origin: ${MELI_ORIGIN:-}
       Booking__WindowDays: "14"
-    ports:
-      - "127.0.0.1:8080:8080"
+    # No host port published — Caddy reaches this over the compose network
+    # at api:8080. Nothing needs to hit this container directly from outside.
 
   admin:
     build: ./src/Clinic.AdminPanel
@@ -55,8 +55,7 @@ services:
     depends_on:
       api:
         condition: service_healthy
-    ports:
-      - "3000:8080"
+    # No host port published — Caddy reaches this at admin:8080.
 
   booking:
     build: ./src/Clinic.BookingPage
@@ -65,8 +64,25 @@ services:
     depends_on:
       api:
         condition: service_healthy
+    # No host port published — Caddy reaches this at booking:8080.
+
+  caddy:
+    image: caddy:2-alpine
+    container_name: clinic-caddy
+    restart: unless-stopped
+    depends_on:
+      - admin
+      - booking
+      - api
     ports:
-      - "3001:8080"
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile
+      - caddy-data:/data
+      - caddy-config:/config
 
 volumes:
   clinic-pgdata:
+  caddy-data:
+  caddy-config:

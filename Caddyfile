@@ -1,0 +1,11 @@
+admin.darmangahteboreza.ir {
+    reverse_proxy admin:8080
+}
+
+booking.darmangahteboreza.ir {
+    reverse_proxy booking:8080
+}
+
+api.darmangahteboreza.ir {
+    reverse_proxy api:8080
+}
