@@ -237,7 +237,8 @@ public class BookingService(
             SmsTemplates.CancellationNotice(
                 appointment.PatientName,
                 appointment.Doctor?.FullName ?? "",
-                JalaliDate.ToJalaliDateTime(appointment.StartsAt)));
+                JalaliDate.ToJalaliDateTime(appointment.StartsAt),
+                appointment.CancelReason));
 
         return appointment.ToDto(appointment.Doctor?.FullName ?? "");
     }

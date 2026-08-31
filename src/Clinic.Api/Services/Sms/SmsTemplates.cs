@@ -11,8 +11,11 @@ public static class SmsTemplates
         return $"{patientName} عزیز، نوبت شما با {doctorName} در تاریخ {startJalali}{loc} ثبت شد. کد پیگیری: {shortCode}";
     }
 
-    public static string CancellationNotice(string patientName, string doctorName, string startJalali) =>
-        $"{patientName} عزیز، نوبت شما با دکتر {doctorName} در تاریخ {startJalali} لغو شد. برای تعیین نوبت جدید با کلینیک تماس بگیرید.";
+    public static string CancellationNotice(string patientName, string doctorName, string startJalali, string? reason = null)
+    {
+        var reasonText = string.IsNullOrWhiteSpace(reason) ? "" : $" دلیل: {reason}.";
+        return $"{patientName} عزیز، نوبت شما با دکتر {doctorName} در تاریخ {startJalali} لغو شد.{reasonText} برای تعیین نوبت جدید با کلینیک تماس بگیرید.";
+    }
 
     public static string CancelOtp(string code) =>
         $"کد تایید لغو نوبت شما: {code}";
@@ -21,7 +24,7 @@ public static class SmsTemplates
         type switch
         {
             SmsType.BookingConfirmation => BookingConfirmation(patientName, doctorName, startJalali, extra ?? ""),
-            SmsType.CancellationNotice => CancellationNotice(patientName, doctorName, startJalali),
+            SmsType.CancellationNotice => CancellationNotice(patientName, doctorName, startJalali, extra),
             SmsType.CancelOtp => CancelOtp(extra ?? ""),
             _ => throw new ArgumentOutOfRangeException(nameof(type)),
         };
