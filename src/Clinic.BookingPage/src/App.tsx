@@ -32,7 +32,7 @@ export default function App() {
           <button className={`nav-link${page === 'doctors' ? ' active' : ''}`} onClick={() => setPage('doctors')}>پزشکان</button>
           <button className={`nav-link${page === 'about' ? ' active' : ''}`} onClick={() => setPage('about')}>درباره ما</button>
         </div>
-        <a className="nav-phone" href={CLINIC.phoneHref}>📞 {CLINIC.phone}</a>
+        <a className="nav-phone" href={CLINIC.phoneHref}>{CLINIC.phone} 📞</a>
       </nav>
 
       {page === 'home' && (
@@ -50,7 +50,7 @@ export default function App() {
         <img src="/logo.jpg" alt="طب الرضا" className="footer-logo" />
         <b>درمانگاه شبانه‌روزی {CLINIC.name}</b>
         <p>تهران، پیروزی — بلوار ابوذر، پل دوم — خیابان ائمه اطهار، نبش برادران باقری، پلاک ۲۳</p>
-        <a className="footer-phone" href={CLINIC.phoneHref}>وقت‌دهی: 📞 {CLINIC.phone}</a>
+        <a className="footer-phone" href={CLINIC.phoneHref}>وقت‌دهی: {CLINIC.phone} 📞</a>
         <p className="copyright">تمامی حقوق برای درمانگاه {CLINIC.name} محفوظ است.</p>
       </footer>
     </div>

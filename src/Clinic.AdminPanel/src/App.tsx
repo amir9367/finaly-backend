@@ -119,23 +119,6 @@ export default function App() {
 
       {/* Page content */}
       <main className="main-content">
-        <div className="admin-topbar">
-          <div className="admin-search">
-            <span className="admin-search-icon">⌕</span>
-            <input placeholder="جستجو در نوبت‌ها، پزشکان..." disabled />
-          </div>
-          <div className="admin-topbar-actions">
-            <button className="admin-icon-btn" title="اعلان‌ها">◐</button>
-            <button className="admin-icon-btn" title="تنظیمات">⚙</button>
-            <div className="admin-user">
-              <div style={{ width: 36, height: 36, borderRadius: '50%', background: 'var(--accent)', color: '#171717', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 800, fontSize: '0.85rem', flexShrink: 0 }}>م</div>
-              <div className="admin-user-meta">
-                <b>مدیر کلینیک</b>
-                <span>Admin</span>
-              </div>
-            </div>
-          </div>
-        </div>
         {page_content}
       </main>
     </div>

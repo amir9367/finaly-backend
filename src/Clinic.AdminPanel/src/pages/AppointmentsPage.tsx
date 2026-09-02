@@ -126,7 +126,7 @@ export default function AppointmentsPage() {
           <Button icon={<ReloadOutlined />} onClick={load}>
             بازخوانی
           </Button>
-          <Button icon={<DownloadOutlined />} onClick={exportFiltered} style={{ background: 'var(--accent)', borderColor: 'var(--accent)', color: '#171717', fontWeight: 700 }}>
+          <Button type="primary" icon={<DownloadOutlined />} onClick={exportFiltered} style={{ fontWeight: 700 }}>
             دانلود اکسل
           </Button>
         </div>

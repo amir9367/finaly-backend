@@ -5,15 +5,23 @@ import faIR from 'antd/locale/fa_IR'
 import App from './App'
 import './styles.css'
 
-// HealthySpace premium palette (#79E19B / #171717 / #FFFFFF)
+// Persian-clinic identity: pine ink, saffron accent, warm paper
 const theme = {
   token: {
-    colorPrimary: '#79E19B',
-    colorInfo: '#79E19B',
-    colorLink: '#171717',
-    colorSuccess: '#79E19B',
-    borderRadius: 16,
-    fontFamily: "Figtree, Vazirmatn, Vazir, 'Segoe UI', Tahoma, sans-serif",
+    colorPrimary: '#0B4F4A',
+    colorInfo: '#2FA79B',
+    colorLink: '#0B4F4A',
+    colorSuccess: '#2FA79B',
+    colorError: '#B3402F',
+    colorWarning: '#E8A33D',
+    colorBgBase: '#F7F5F0',
+    colorBgContainer: '#FFFFFF',
+    colorText: '#1E2B29',
+    colorTextSecondary: '#63716D',
+    colorBorder: '#E5E0D4',
+    colorBorderSecondary: '#EFEAE0',
+    borderRadius: 12,
+    fontFamily: "Vazirmatn, 'Segoe UI', Tahoma, sans-serif",
   },
 }
 
