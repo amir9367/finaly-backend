@@ -58,10 +58,10 @@ export default function AboutPage() {
             <div className="info-card">
               <h3 className="info-card-title">تماس با ما</h3>
               <p>
-                وقت‌دهی عمومی: <a href="tel:34246" style={{ color: 'var(--gm)', fontWeight: 700 }}>📞 ۳۴۲۴۶</a><br />
-                آزمایشگاه: <a href="tel:03133101478" style={{ color: 'var(--gm)', fontWeight: 700 }}>📞 ۰۳۱۳۳۱۰۱۴۷۸</a><br />
-                دندانپزشکی: <a href="tel:03133101460" style={{ color: 'var(--gm)', fontWeight: 700 }}>📞 ۰۳۱۳۳۱۰۱۴۶۰</a><br />
-                رادیولوژی: <a href="tel:03133059034" style={{ color: 'var(--gm)', fontWeight: 700 }}>📞 ۰۳۱۳۳۰۵۹۰۳۴</a>
+                وقت‌دهی عمومی: <a href="tel:34246">📞 ۳۴۲۴۶</a><br />
+                آزمایشگاه: <a href="tel:03133101478">📞 ۰۳۱۳۳۱۰۱۴۷۸</a><br />
+                دندانپزشکی: <a href="tel:03133101460">📞 ۰۳۱۳۳۱۰۱۴۶۰</a><br />
+                رادیولوژی: <a href="tel:03133059034">📞 ۰۳۱۳۳۰۵۹۰۳۴</a>
               </p>
             </div>
           </div>

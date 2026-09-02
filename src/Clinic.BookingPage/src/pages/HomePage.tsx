@@ -141,7 +141,7 @@ export default function HomePage({ onBook, onDoctors, onAbout }: Props) {
             <button className="btn-primary btn-lg" onClick={onBook}>
               رزرو نوبت آنلاین
             </button>
-            <button className="btn-ghost" onClick={onAbout}>
+            <button className="btn-pine" onClick={onAbout}>
               درباره درمانگاه
             </button>
           </div>

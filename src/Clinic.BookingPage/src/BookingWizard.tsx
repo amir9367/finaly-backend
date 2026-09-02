@@ -2,15 +2,12 @@ import { useEffect, useState } from 'react'
 import {
   Alert,
   Button,
-  Descriptions,
   Empty,
   Form,
   Input,
   Radio,
-  Result,
   Select,
   Steps,
-  Tag,
   message,
 } from 'antd'
 import { book, errMsg, getAvailability, getDoctors } from './api'
@@ -109,32 +106,41 @@ export default function BookingWizard() {
   if (booked) {
     return (
       <div className="wizard-card">
-        <Result
-          status="success"
-          title={B.doneTitle}
-          subTitle={B.doneSub}
-          extra={
-            <div>
-              <Descriptions
-                column={1}
-                bordered
-                size="small"
-                style={{ maxWidth: 400, margin: '0 auto 16px' }}
-                items={[
-                  { key: 'name', label: B.patientName, children: booked.patientName },
-                  { key: 'doctor', label: B.stepDoctor, children: booked.doctorName },
-                  { key: 'time', label: B.stepTime, children: booked.startJalali },
-                  {
-                    key: 'code',
-                    label: B.trackingCode,
-                    children: <Tag color="green" style={{ fontSize: 15 }}>{booked.shortCode}</Tag>,
-                  },
-                ]}
-              />
-              <Button type="primary" onClick={reset}>{B.newBooking}</Button>
+        <div className="ticket">
+          <div className="ticket-head">
+            <b>نوبت‌نامه</b>
+            <span>درمانگاه طب الرضا(ع)</span>
+          </div>
+          <div className="ticket-body">
+            <dl style={{ margin: 0 }}>
+              <div className="ticket-row">
+                <dt>{B.patientName}</dt>
+                <dd>{booked.patientName}</dd>
+              </div>
+              <div className="ticket-row">
+                <dt>{B.stepDoctor}</dt>
+                <dd>{booked.doctorName}</dd>
+              </div>
+              <div className="ticket-row">
+                <dt>{B.stepTime}</dt>
+                <dd>{booked.startJalali}</dd>
+              </div>
+              <div className="ticket-row">
+                <dt>{B.trackingCode}</dt>
+                <dd><span className="ticket-code">{booked.shortCode}</span></dd>
+              </div>
+            </dl>
+            <div className="ticket-stamp" aria-hidden="true">
+              <b>ثبت شد</b>
+              <span>طب الرضا(ع)</span>
             </div>
-          }
-        />
+          </div>
+          <hr className="ticket-perf" />
+          <div className="ticket-foot">
+            <span className="ticket-foot-note">{B.doneSub}</span>
+            <Button type="primary" onClick={reset}>{B.newBooking}</Button>
+          </div>
+        </div>
       </div>
     )
   }
@@ -252,8 +258,7 @@ export default function BookingWizard() {
           <Form.Item<FormValues> name="notes" label={B.notes}>
             <Input.TextArea rows={2} />
           </Form.Item>
-          <Button type="primary" htmlType="submit" block size="large" loading={submitting}
-            style={{ background: 'var(--accent)', borderColor: 'var(--accent)' }}>
+          <Button type="primary" htmlType="submit" block size="large" loading={submitting}>
             {B.submit}
           </Button>
         </Form>

@@ -5,24 +5,34 @@ import faIR from 'antd/locale/fa_IR'
 import App from './App'
 import './styles.css'
 
-// HealthySpace — dark premium palette (#171717 / #79E19B / #FFFFFF)
+// Persian-clinic identity: pine ink, saffron accent, warm paper (light theme)
 const theme = {
   token: {
-    colorPrimary: '#79E19B',
-    colorInfo: '#79E19B',
-    colorLink: '#79E19B',
-    colorSuccess: '#79E19B',
-    colorBgBase: '#171717',
-    borderRadius: 16,
-    fontFamily: "Figtree, Vazirmatn, Vazir, 'Segoe UI', Tahoma, sans-serif",
-    colorTextBase: '#FFFFFF',
+    colorPrimary: '#0B4F4A',
+    colorInfo: '#2FA79B',
+    colorLink: '#0B4F4A',
+    colorSuccess: '#2FA79B',
+    colorError: '#B3402F',
+    colorWarning: '#E8A33D',
+    colorBgBase: '#F7F5F0',
+    colorBgContainer: '#FFFFFF',
+    colorText: '#1E2B29',
+    colorTextSecondary: '#63716D',
+    colorBorder: '#E5E0D4',
+    colorBorderSecondary: '#EFEAE0',
+    borderRadius: 12,
+    fontFamily: "Vazirmatn, 'Segoe UI', Tahoma, sans-serif",
   },
   components: {
-    Table: { headerBg: '#1E1E1E', headerColor: '#A1A1A1', rowHoverBg: 'rgba(121,225,155,0.06)', borderColor: 'rgba(255,255,255,0.06)' },
-    Card: { colorBgContainer: '#1E1E1E' },
-    Modal: { contentBg: '#1E1E1E', headerBg: '#1E1E1E', titleColor: '#FFFFFF' },
-    Select: { colorBgContainer: '#242424', colorBorder: 'rgba(255,255,255,0.08)' },
-    Input: { colorBgContainer: '#242424', colorBorder: 'rgba(255,255,255,0.08)', activeBorderColor: '#79E19B' },
+    Table: {
+      headerBg: '#EAF3F1',
+      headerColor: '#0B4F4A',
+      rowHoverBg: '#E4F2F0',
+      borderColor: '#EFEAE0',
+    },
+    Modal: { titleColor: '#0B4F4A' },
+    Select: { colorBorder: '#E5E0D4' },
+    Input: { colorBorder: '#E5E0D4', activeBorderColor: '#0B4F4A' },
   },
 }
 

@@ -28,6 +28,7 @@ interface ScheduleInput {
 interface DoctorPayload {
   fullName: string
   specialty?: string
+  location?: string
   defaultVisitMinutes: number
   isActive: boolean
   schedules?: ScheduleInput[]

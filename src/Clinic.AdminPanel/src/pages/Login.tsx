@@ -33,8 +33,7 @@ export default function Login({ onSuccess }: { onSuccess: () => void }) {
           <Form.Item name="password" label="گذرواژه" rules={[{ required: true, message: 'گذرواژه را وارد کنید' }]}>
             <Input.Password size="large" />
           </Form.Item>
-          <Button type="primary" htmlType="submit" block loading={loading} size="large"
-            style={{ background: 'var(--gm)', borderColor: 'var(--gm)', marginTop: 4 }}>
+          <Button type="primary" htmlType="submit" block loading={loading} size="large">
             ورود
           </Button>
           <div className="login-footnote">درمانگاه شبانه‌روزی طب الرضا(ع) — وقت‌دهی: ۳۴۲۴۶</div>
